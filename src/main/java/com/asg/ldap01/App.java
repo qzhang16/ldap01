@@ -2,8 +2,11 @@ package com.asg.ldap01;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NameClassPair;
-import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapContext;
 
 /**
  * Hello world!
@@ -20,16 +23,29 @@ public class App
         // env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
         // env.put(Context.SECURITY_CREDENTIALS, "secret");
 
-        Context ctx = new InitialContext();
+        Context ctx0 = new InitialContext();
+        LdapContext ctx = (LdapContext) ctx0.lookup("");
+        Attributes atrs = new BasicAttributes(true);
+        Attribute atr = new BasicAttribute("objectclass");
+        atr.add("top");
+        atr.add("organizationalUnit");
+        atrs.put(atr);
+
+        LdapContext newOu = (LdapContext) ctx.createSubcontext("ou=develop", atrs);
+        System.out.println(newOu.getNameInNamespace());
+
+
+
+        // LdapContext ctx = (LdapContext) InitialContext.doLookup("ou=people");
         // DirContext dctx = new InitialDirContext(env);
         // LdapContext a = (LdapContext) ctx.lookup("cn=John Hallett");
         // a.list("").toString();
         // System.out.println(ctx.list("").toString());
-        NamingEnumeration<NameClassPair> n = ctx.list("");
-        while (n.hasMore()) {
-            //    System.out.println( n.next().getNameInNamespace());
-            System.out.println(n.next().getName());
-        }
+        // NamingEnumeration<NameClassPair> n = ctx.list("");
+        // while (n.hasMore()) {
+        //     //    System.out.println( n.next().getNameInNamespace());
+        //     System.out.println(n.next());
+        // }
 
     }
 }
