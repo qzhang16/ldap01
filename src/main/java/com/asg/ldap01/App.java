@@ -3,8 +3,8 @@ package com.asg.ldap01;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 import javax.naming.ldap.LdapContext;
 
 /**
@@ -24,12 +24,26 @@ public class App {
         Context ctx0 = new InitialContext();
         LdapContext ctx = (LdapContext) ctx0.lookup("");
 
-        String filter = "(&(cn=John*)(mail=*))";
-        SearchControls sctls = new SearchControls();
-        NamingEnumeration<SearchResult> answer = ctx.search("ou=people", filter, sctls);
-        while (answer.hasMore()) {
-            System.out.println(answer.next().getName());
+        Attributes answer = ctx.getAttributes("", new String[] { "supportedSASLMechanisms" });
+        NamingEnumeration<? extends Attribute> as = answer.getAll();
+
+        while (as.hasMore()) {
+            Attribute a = as.next();
+            NamingEnumeration<?> vs = a.getAll();
+            while (vs.hasMore()) {
+                System.out.println(vs.next());
+            }
+
         }
+        
+        // LdapContext ctx = (LdapContext) ctx0.lookup("");
+
+        // String filter = "(&(cn=John*)(mail=*))";
+        // SearchControls sctls = new SearchControls();
+        // NamingEnumeration<SearchResult> answer = ctx.search("ou=people", filter, sctls);
+        // while (answer.hasMore()) {
+        //     System.out.println(answer.next().getName());
+        // }
         // Attributes atrs = new BasicAttributes(true);
         // Attribute atr = new BasicAttribute("objectclass");
         // atr.add("top");
