@@ -1,21 +1,17 @@
 package com.asg.ldap01;
 
-import java.util.concurrent.CountDownLatch;
+import java.io.Serializable;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.event.EventContext;
-import javax.naming.event.NamespaceChangeListener;
-import javax.naming.event.NamingEvent;
-import javax.naming.event.NamingExceptionEvent;
-import javax.naming.event.NamingListener;
+import javax.naming.directory.DirContext;
 
 /**
  * Hello world!
  *
  */
-public class App implements NamespaceChangeListener {
-    private static final CountDownLatch latch = new CountDownLatch(1);
+public class App  {
+    
     public static void main(String[] args) throws Exception {
         System.out.println("Hello World!");
         // Hashtable<String, Object> env = new Hashtable<>();
@@ -25,12 +21,25 @@ public class App implements NamespaceChangeListener {
         // env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
         // env.put(Context.SECURITY_CREDENTIALS, "secret");
 
-        Context ctx0 = new InitialContext();
-        EventContext ctx = (EventContext) ctx0.lookup("ou=people,o=sevenSeas,dc=example,dc=com");
+        Context ctx = new InitialContext();
+        DirContext abc = (DirContext) ctx.lookup("cn=abc,ou=people");
 
-        NamingListener listener = new App();
-        ctx.addNamingListener("", EventContext.SUBTREE_SCOPE, listener);
-        latch.await();
+        // Abcs abc01 = new Abcs();
+        // abc01.setId(1);
+        // abc01.setName("Bob");
+
+        // abc.bind("cn=neighbor", abc01);
+        // abc.unbind("cn=neighbor");
+
+        Abcs a = (Abcs) abc.lookup("cn=neighbor");
+        System.out.println("id: " + a.getId());
+        System.out.println("name: " + a.getName());
+
+        // EventContext ctx = (EventContext) ctx0.lookup("ou=people,o=sevenSeas,dc=example,dc=com");
+
+        // NamingListener listener = new App();
+        // ctx.addNamingListener("", EventContext.SUBTREE_SCOPE, listener);
+        // latch.await();
         // Attributes answer = ctx.getAttributes("", new String[] { "supportedSASLMechanisms" });
         // NamingEnumeration<? extends Attribute> as = answer.getAll();
 
@@ -42,10 +51,6 @@ public class App implements NamespaceChangeListener {
         //     }
 
         // }
-
-    
-
-        
 
         // LdapContext ctx = (LdapContext) ctx0.lookup("");
 
@@ -90,31 +95,47 @@ public class App implements NamespaceChangeListener {
 
     }
 
-   
+    // @Override
+    // public void objectAdded(NamingEvent evt) {
 
-    @Override
-    public void objectAdded(NamingEvent evt) {
-        
-        System.out.println("object added:" + evt.getChangeInfo());
-        latch.countDown();
+    //     System.out.println("object added:" + evt.getChangeInfo());
+    //     latch.countDown();
+    // }
+
+    // @Override
+    // public void objectRemoved(NamingEvent evt) {
+    //     System.out.println("object removed:" + evt.getChangeInfo());
+    //     latch.countDown();
+    // }
+
+    // @Override
+    // public void objectRenamed(NamingEvent evt) {
+    //     System.out.println("object removed:" + evt.getChangeInfo());
+    //     latch.countDown();
+    // }
+
+    // @Override
+    // public void namingExceptionThrown(NamingExceptionEvent evt) {
+    //     evt.getException().printStackTrace();
+    // }
+}
+
+class Abcs implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int id;
+    private String name;
+    public int getId() {
+        return id;
     }
-
-    @Override
-    public void objectRemoved(NamingEvent evt) {
-        System.out.println("object removed:" + evt.getChangeInfo());
-        latch.countDown();
+    public void setId(int id) {
+        this.id = id;
     }
-
-    @Override
-    public void objectRenamed(NamingEvent evt) {
-        System.out.println("object removed:" + evt.getChangeInfo());
-        latch.countDown();
+    public String getName() {
+        return name;
     }
-
-
-
-    @Override
-    public void namingExceptionThrown(NamingExceptionEvent evt) {
-        evt.getException().printStackTrace();
+    public void setName(String name) {
+        this.name = name;
     }
+    
+
 }
