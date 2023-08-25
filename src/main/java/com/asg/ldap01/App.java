@@ -23,6 +23,7 @@ public class App  {
 
         Context ctx = new InitialContext();
         DirContext abc = (DirContext) ctx.lookup("cn=abc,ou=people");
+        System.out.println(abc.getAttributes("").get("mail").get());
 
         // Abcs abc01 = new Abcs();
         // abc01.setId(1);
@@ -31,9 +32,9 @@ public class App  {
         // abc.bind("cn=neighbor", abc01);
         // abc.unbind("cn=neighbor");
 
-        Abcs a = (Abcs) abc.lookup("cn=neighbor");
-        System.out.println("id: " + a.getId());
-        System.out.println("name: " + a.getName());
+        // Abcs a = (Abcs) abc.lookup("cn=neighbor");
+        // System.out.println("id: " + a.getId());
+        // System.out.println("name: " + a.getName());
 
         // EventContext ctx = (EventContext) ctx0.lookup("ou=people,o=sevenSeas,dc=example,dc=com");
 
